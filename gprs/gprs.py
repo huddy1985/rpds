@@ -10,7 +10,15 @@ from mlog.log import rpdt_logging
 PARITY_NONE, PARITY_EVEN, PARITY_ODD, PARITY_MARK, PARITY_SPACE = 'N', 'E', 'O', 'M', 'S'
 STOPBITS_ONE, STOPBITS_ONE_POINT_FIVE, STOPBITS_TWO = (1, 1.5, 2)
 FIVEBITS, SIXBITS, SEVENBITS, EIGHTBITS = (5, 6, 7, 8)
-GPRS_MODE_DATA_TRANSPARENT, GPRS_MODE_MSG_TRANSPARENT, GPRS_MODE_HTTP_TRANSPARENT, GPRS_MODE_AT = 'DT', 'MT', 'HTTP', "AT"
+GPRS_MODE_DATA_TRANSPARENT, GPRS_MODE_MSG_TRANSPARENT, GPRS_MODE_HTTP_TRANSPARENT, GPRS_MODE_AT = 'DT', 'MT', 'HTTP', 'AT'
+
+GPRS_MOD = {
+    "0" : "data transparent",
+    "1" : "serial cmd",
+    "2" : "AT command",
+    "3" : "HTTP client",
+    "4" : "msg mode"
+}
 
 class gprs:
     def __init__(self):
@@ -41,12 +49,17 @@ class gprs:
 
         self.open()
         self.g_c_status = self.g_status[0]
+        curmod = self.getWorkMode()
+        if curmod != -1:
+            print 'cur mode is ' + GPRS_MOD[str(curmod)]
+            self.setWorkMode(0)
+
         while self.g_c_status != self.g_status[1]:
             tryplus = 10
             while tryplus >= 0 and self.g_c_status != self.g_status[1]:
+                self.msleep(250)
                 self.send('+++')
                 output = self.recv()
-                self.msleep(300)
                 tryplus -= 1
                 if 'a' in output:
                     trya = 10
@@ -62,9 +75,8 @@ class gprs:
                 else:
                     self.setEntm()
             self.msleep(250)
-
-        self.setWorkMode(self.mode)
-        self.getDTU()
+        #self.getDTU()
+        #self.setWorkMode(self.mode)
 
     @property
     def mode(self):
@@ -73,6 +85,9 @@ class gprs:
     @mode.setter
     def mode(self, mode):
         self.mode = mode
+
+    def reset(self):
+        pass
 
     def open(self):
         # selComPort = '/dev/ttyUSB0'
@@ -98,7 +113,7 @@ class gprs:
 
     def recv(self):
         output = self.ser.readall()
-        print output
+        # print output
         return output
 
     def getSerialINfo(self):
@@ -154,6 +169,7 @@ class gprs:
         self.send('AT+CIPSCONT?')
         output = self.recv()
         self.log.info(output)
+        return output
 
     def getBasement(self):
         self.log.debug(sys._getframe().f_code.co_filename)
@@ -236,6 +252,21 @@ class gprs:
         self.send('AT+CIMOD="' + str(mode) + '"')
         output = self.recv()
         self.log.info(output)
+
+    def getWorkMode(self):
+        self.log.debug(sys._getframe().f_code.co_filename)
+        self.log.debug(sys._getframe().f_code.co_name)
+        self.log.debug(sys._getframe().f_lineno)
+        output = self.getDTU()
+        # print output
+        if '+CIMOD:' in output:
+            pos_start = output.find('+CIMOD:')
+            pos_end = output.find('+CINETAT:1')
+            # many line end '2\r\n\r'
+            mod = output[pos_start + 8:pos_end - 4]
+            self.log.info('mod is ' + mod)
+            return mod
+        return -1
 
     # AT+CIPSCONT=PNUM, "PORTOCOL","ADDRESS", "PORT",START
     # PNUM     表示配置第 PNUM     个连接。
@@ -325,29 +356,16 @@ class gprs:
         self.log.debug(sys._getframe().f_code.co_filename)
         self.log.debug(sys._getframe().f_code.co_name)
         self.log.debug(sys._getframe().f_lineno)
-        self.send('AT+CISEND')
         if len(data) == 0:
             return
-        tryback = 50
-        while tryback > 0:
-            output = self.recv()
-            self.log.info(output)
-            if '>' in output:
-                self.log.info(data)
-                print 'send data:' + data
-                self.ser.write(data)
-                output = self.recv()
-                self.log.info(output)
-                break
-            else:
-                print output
-            tryback -= 1
+        print 'send data:' + data
+        self.ser.write(data)
+        self.log.info('send data:' + data)
 
     def recvData(self):
         self.log.debug(sys._getframe().f_code.co_filename)
         self.log.debug(sys._getframe().f_code.co_name)
         self.log.debug(sys._getframe().f_lineno)
-        self.send('AT+CISEND')
         output = self.recv()
         print output
         return output
