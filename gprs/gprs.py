@@ -1,5 +1,4 @@
 # encoding=utf-8
-
 import serial
 import time
 import sys
@@ -34,6 +33,7 @@ class gprs:
         self.log = rpdt_logging()
         self.log.init(20)
         self.mode = GPRS_MODE_DATA_TRANSPARENT
+        self.imei = -1
 
     def msleep(self, timeout):
         time.sleep(timeout/1000)
@@ -49,8 +49,11 @@ class gprs:
 
         self.open()
         self.g_c_status = self.g_status[0]
+        self.setWorkMode(0)
+        self.imei = self.getIMEI().replace('OK', '')
+
         curmod = self.getWorkMode()
-        if curmod != -1:
+        if curmod != -1 and curmod in (0, 1, 2, 3, 4):
             print 'cur mode is ' + GPRS_MOD[str(curmod)]
             self.setWorkMode(0)
 
@@ -75,8 +78,6 @@ class gprs:
                 else:
                     self.setEntm()
             self.msleep(250)
-        #self.getDTU()
-        #self.setWorkMode(self.mode)
 
     @property
     def mode(self):
@@ -85,6 +86,10 @@ class gprs:
     @mode.setter
     def mode(self, mode):
         self.mode = mode
+
+    @property
+    def imei(self):
+        return self.imei
 
     def reset(self):
         pass
@@ -112,9 +117,14 @@ class gprs:
             self.msleep(timeout)
 
     def recv(self):
-        output = self.ser.readall()
-        # print output
-        return output
+        output = ''
+        try:
+            output = self.ser.readall().strip().replace('\r', '').replace('\n', '')
+            # print output
+            return output
+        except serial.serialutil.SerialException, e:
+            print e.message
+            return output
 
     def getSerialINfo(self):
         self.log.debug(sys._getframe().f_code.co_filename)
@@ -194,14 +204,16 @@ class gprs:
         self.send('AT')
         output = self.recv()
         self.log.info(output)
+        return output
 
     def getIMEI(self):
         self.log.debug(sys._getframe().f_code.co_filename)
         self.log.debug(sys._getframe().f_code.co_name)
         self.log.debug(sys._getframe().f_lineno)
         self.send('AT+CGSN')
-        output = self.recv()
+        output = self.recv().replace('OK', '')
         self.log.info(output)
+        return output
 
     def getCurTime(self):
         self.log.debug(sys._getframe().f_code.co_filename)
