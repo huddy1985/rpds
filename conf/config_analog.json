@@ -1,0 +1,19 @@
+{
+    "analog_conf": {
+        "serial_info": {
+            "serial_param": {
+                "__comment__parity": "O:奇校验 E:偶校验 N:无校验",
+                "stopbit": 1,
+                "parity": "N",
+                "baultrate": 9600,
+                "beats": 8,
+                "timeout": 1,
+                "port": "/dev/ttyUSB0"
+            }
+        }
+    },
+    "date_u": "2017-12-17 13:03",
+    "ver": "1.0",
+    "name": "rpds",
+    "module": "gprs"
+}

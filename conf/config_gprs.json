@@ -1,7 +1,8 @@
 {
     "gprs_conf": {
-        "__comment__networkAT": "AT+CINETAT=0<CR>      0:forbit AT, 1:enable AT", 
+        "IMSI": "0", 
         "__comment__base": "基站info", 
+        "IMEI": "135790246811220", 
         "gprs_basement": "", 
         "gprs_net_status": "0,0,0,0", 
         "gprs_IP": "", 
@@ -9,44 +10,44 @@
         "__comment_gprs_mode": "MOD 表示工作模式,为 0 表示透传模式,为 1 表示串口命令模式,为 2 表示 AT 指令模式,为 3表示为 HTTPD Client 模式,为 4 表示短信透传模式。", 
         "connection_info": {
             "connection1_info": {
-                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
+                "enable": "0", 
                 "pnum": "1", 
                 "__comment__protocol": "PORTOCOL 表示连接的协议是 UDP/TCP。", 
                 "__comment__enable": "START 表示是否启用,0 为不启用,1 为启用。", 
-                "enable": "0", 
+                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
                 "address": "10.204.16.28", 
                 "protocol": "TCP", 
                 "__comment__pnum": "PNUM 表示配置第 PNUM 个连接。", 
                 "port": "8001"
             }, 
             "connection4_info": {
-                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
+                "enable": "0", 
                 "pnum": "1", 
                 "__comment__protocol": "PORTOCOL 表示连接的协议是 UDP/TCP。", 
                 "__comment__enable": "START 表示是否启用,0 为不启用,1 为启用。", 
-                "enable": "0", 
+                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
                 "address": "10.204.16.28", 
                 "protocol": "TCP", 
                 "__comment__pnum": "PNUM 表示配置第 PNUM 个连接。", 
                 "port": "8001"
             }, 
             "connection2_info": {
-                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
+                "enable": "0", 
                 "pnum": "1", 
                 "__comment__protocol": "PORTOCOL 表示连接的协议是 UDP/TCP。", 
                 "__comment__enable": "START 表示是否启用,0 为不启用,1 为启用。", 
-                "enable": "0", 
+                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
                 "address": "10.204.16.28", 
                 "protocol": "TCP", 
                 "__comment__pnum": "PNUM 表示配置第 PNUM 个连接。", 
                 "port": "8001"
             }, 
             "connection3_info": {
-                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
+                "enable": "0", 
                 "pnum": "1", 
                 "__comment__protocol": "PORTOCOL 表示连接的协议是 UDP/TCP。", 
                 "__comment__enable": "START 表示是否启用,0 为不启用,1 为启用。", 
-                "enable": "0", 
+                "__comment__cmd": "AT+CIPSCONT=PNUM, \"PORTOCOL\",\"ADDRESS\", \"PORT\",START<LF>", 
                 "address": "10.204.16.28", 
                 "protocol": "TCP", 
                 "__comment__pnum": "PNUM 表示配置第 PNUM 个连接。", 
@@ -56,49 +57,48 @@
         "serial_info": {
             "serial_param": {
                 "__comment__parity": "O:奇校验 E:偶校验 N:无校验", 
-                "stopbit": "1", 
+                "stopbit": 1, 
                 "parity": "N", 
-                "baultrate": "115200", 
-                "beats": "8", 
-                "timeout": "1", 
+                "baultrate": 115200, 
+                "beats": 8, 
+                "timeout": 1, 
                 "port": "/dev/ttyUSB0"
             }
         }, 
+        "__comment__networkAT": "AT+CINETAT=0<CR>      0:forbit AT, 1:enable AT", 
+        "networkAT": "1", 
+        "gprs_mode": "0", 
+        "__comment__net_status": "first connect,second connection,third connection,forth connection", 
+        "current_signal_strength": "", 
         "dtu": {
             "cfg": {
                 "__comment__pack_pkt_time": "TIME 表示串口打包时间,单位毫秒。设定时间内串口没有接收到新的数据则将已接收到的数据打包。", 
                 "__comment_rtime": "RTIME 表示自动重启时间,单位秒。当设定的时间内没有串口数据同时没有网络数据接收,则模块重启,当设定的时间小于 600 秒时,自动重启功能禁用。", 
                 "heartbeat_time": "50", 
+                "pkt_retime": "1800", 
                 "__comment__pkt_len": "LEN 表示打包长度,暂未启用。", 
                 "pack_pkt_time": "100", 
-                "cft_ret": "OK", 
-                "cfg_example": "示例:AT+CIPCFG=1,30,0,100,10,1800<CR>。说明:配置心跳时间 30s,串口打包时间 100ms,打包长度 10,自动重启时间 1800s。", 
+                "__comment__heartbeat_time": "HEAT 表示心跳包发送时间间隔,单位秒。当设定的时间内没有网络数据传输,模块将会向服务器发送心跳包维持连接,设置时间为 0 秒时心跳功能禁用。", 
                 "pkt_len": "10", 
                 "cmd_format": "AT+CIPCFG=1,HEAT,0,TIME,LEN,RTIME<CR>", 
-                "pkt_retime": "1800", 
-                "__comment__heartbeat_time": "HEAT 表示心跳包发送时间间隔,单位秒。当设定的时间内没有网络数据传输,模块将会向服务器发送心跳包维持连接,设置时间为 0 秒时心跳功能禁用。"
+                "cfg_example": "示例:AT+CIPCFG=1,30,0,100,10,1800<CR>。说明:配置心跳时间 30s,串口打包时间 100ms,打包长度 10,自动重启时间 1800s。", 
+                "cft_ret": "OK"
             }, 
             "pkt_heartbeat_content": {
-                "heartbeat_data": "3133353739303234363831313232302d2d6865617274626561743a", 
-                "heartbeat_content_ret": "OK", 
+                "heartbeat_data": "3133353739303234363831313232303a6865617274626561743a", 
+                "heartbeat_direction": "0", 
                 "__comment__heartbeat_data": "HEATDATA 表示心跳包数据内容,十六进制表示,每两个字节表示一个十六进制数。心跳包最大长度为 40 字节。ex:rpsd hello", 
                 "__comment__direction": "STA 表示心跳数据发送方向,0 为心跳包向网络发送,1 表示心跳数据向串口发送。", 
-                "heartbeat_direction": "0"
+                "heartbeat_content_ret": "OK"
             }, 
             "pkt_register_content": {
-                "login_data": "3133353739303234363831313232302d2d6c6f67696e65643a20", 
+                "login_data": "3133353739303234363831313232303a6c6f67696e65643a20", 
                 "__comment__status": "STATUS 表示注册包启用方式,0 为连接即发注册包,1 为发送数据带注册包。注册包最大长度为40 字节。", 
-                "login_status": "0", 
                 "__comment__login_data": "LOGINDATA 表示注册包数据,格式同心跳包。ex:rpsd logined:", 
+                "login_status": "0", 
                 "pkt_register_content_ret": "OK"
             }
-        }, 
-        "IMEI": "135790246811220", 
-        "networkAT": "1", 
-        "gprs_mode": "0", 
-        "__comment__net_status": "first connect,second connection,third connection,forth connection", 
-        "current_signal_strength": "", 
-        "IMSI": "0"
+        }
     }, 
     "date_u": "2017-12-17 13:03", 
     "ver": "1.0", 
